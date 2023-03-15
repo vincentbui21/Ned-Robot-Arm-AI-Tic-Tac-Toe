@@ -2,20 +2,23 @@ import cv2
 import numpy as np
 import time
 from pyniryo import * 
-# Create a blank image with a white background
 
+"""
 robot = NiryoRobot("10.10.10.10")
 robot.calibrate_auto()
 obsevervation_pose = 0,-0.38,-0.08,0,-1.45,0
 robot.move_joints(obsevervation_pose) #observation pose
+"""
 
-img=cv2.VideoCapture(1)
 
 
+img=cv2.VideoCapture(0)
+arr=[0,0,0,0,0,0,0,0,0]
 while True:
+    
     ret,frame = img.read()
     frame = cv2.flip(frame, 1)
-    frame = cv2.flip(frame, -1)
+    #frame = cv2.flip(frame, -1)
 
     w = int(img.get(3))
     h = int(img.get(4))
@@ -46,9 +49,9 @@ while True:
 
     contours, hierarchy = cv2.findContours(blur, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    start_time=0
-    count_end = 5
-    inside_square=False
+    start_time = 0
+    
+
 
     for contour in contours:
         area = cv2.contourArea(contour)
@@ -56,37 +59,56 @@ while True:
             cv2.drawContours(frame, [contour], -1, (0, 255, 0), 2)
             x, y, w, hei = cv2.boundingRect(contour)
             
-            if x > a and y > 0 and x + w < a+c and y + hei < c: #first square                
-                print("Object found inside the 1st square.")
-                break
+            if x > a and y > 0 and x + w < a+c and y + hei < c: #first square                                               
+                arr[0]+=1
+                if arr[0]==90:
+                    print("Object found inside 1st square")
+                break                      
             elif x > a+c and y > 0 and x + w < a+d and y + hei < c: #second square
-                print("Object found inside the 2nd square.")
-                break           
+                arr[1]+=1
+                if arr[1]==90:
+                    print("Object found inside 2nd square")
+                break                         
             elif x > a+d and y > 0 and x + w < (a+h) and y + hei < c: #third square
-                print("Object found inside the 3rd square.")
-                break
+                arr[2]+=1
+                if arr[2]==90:
+                    print("Object found inside 3rd square")
+                break               
             elif x > a and y > c and x + w < a+c and y + hei < d: #forth square
-                print("Object found inside the 4th square.")
-                break    
+                arr[3]+=1
+                if arr[3]==90:
+                    print("Object found inside 4th square")
+                break                   
             elif x > a+c and y > c and x + w < a+d and y + hei < d: #fifth square
-                print("Object found inside the 5th square.")
-                break
+                arr[4]+=1
+                if arr[4]==90:
+                    print("Object found inside 5st square")
+                break               
             elif x > a+d and y > c and x + w < a+h and y + hei < d: #sixth square
-                print("Object found inside the 6th square.")
-                break
+                arr[5]+=1
+                if arr[5]==90:
+                    print("Object found inside 6st square")
+                break               
             elif x > a and y > d and x + w < a+c and y + hei < h: #seventh square
-                print("Object found inside the 7th square.")
-                break
+                arr[6]+=1
+                if arr[6]==90:
+                    print("Object found inside 7th square")
+                break               
             elif x > a+c and y > d and x + w < a+d and y + hei < h: #eighth square
-                print("Object found inside the 8th square.")
-                break
+                arr[7]+=1
+                if arr[7]==90:
+                    print("Object found inside 8th square")
+                break               
             elif x > a+d and y > d and x + w < a+h and y + hei < h: #ninth square
-                print("Object found inside the 9th square.")
-                break
-           
+                arr[8]+=1
+                if arr[8]==90:
+                    print("Object found inside 9th square")
+                break               
+            else:
+                pass   
 
     cv2.imshow("",frame)
     if cv2.waitKey(1)==ord("q"):
-        break
+        break           
 img.release()
 
