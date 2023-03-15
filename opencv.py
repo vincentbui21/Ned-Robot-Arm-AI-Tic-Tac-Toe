@@ -1,14 +1,21 @@
 import cv2
 import numpy as np
 import time
-
+from pyniryo import * 
 # Create a blank image with a white background
-img=cv2.VideoCapture(0)
+
+robot = NiryoRobot("10.10.10.10")
+robot.calibrate_auto()
+obsevervation_pose = 0,-0.38,-0.08,0,-1.45,0
+robot.move_joints(obsevervation_pose) #observation pose
+
+img=cv2.VideoCapture(1)
 
 
 while True:
     ret,frame = img.read()
     frame = cv2.flip(frame, 1)
+    frame = cv2.flip(frame, -1)
 
     w = int(img.get(3))
     h = int(img.get(4))
@@ -45,7 +52,7 @@ while True:
 
     for contour in contours:
         area = cv2.contourArea(contour)
-        if area > 1000:
+        if area > 2000:
             cv2.drawContours(frame, [contour], -1, (0, 255, 0), 2)
             x, y, w, hei = cv2.boundingRect(contour)
             
