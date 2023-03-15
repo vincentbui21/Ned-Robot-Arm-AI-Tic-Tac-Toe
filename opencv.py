@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import time
 
 # Create a blank image with a white background
 img=cv2.VideoCapture(0)
@@ -38,16 +39,19 @@ while True:
 
     contours, hierarchy = cv2.findContours(blur, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
+    start_time=0
+    count_end = 5
+    inside_square=False
 
     for contour in contours:
         area = cv2.contourArea(contour)
-        if area > 100:
+        if area > 1000:
             cv2.drawContours(frame, [contour], -1, (0, 255, 0), 2)
             x, y, w, hei = cv2.boundingRect(contour)
             
-            if x > a and y > 0 and x + w < a+c and y + hei < c: #first square
+            if x > a and y > 0 and x + w < a+c and y + hei < c: #first square                
                 print("Object found inside the 1st square.")
-                break            
+                break
             elif x > a+c and y > 0 and x + w < a+d and y + hei < c: #second square
                 print("Object found inside the 2nd square.")
                 break           
