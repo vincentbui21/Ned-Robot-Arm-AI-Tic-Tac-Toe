@@ -1,8 +1,9 @@
 from opencv import detect_move
-from pyniryo import *
 import sys
 import time
+import nedcoding
 
+robot=nedcoding.robot
 # Tic Tac Toe board
 board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
 
@@ -85,10 +86,14 @@ def ai_move():
             best_score = score
             best_cell = cell
     board[best_cell] = 'X'
+    nedcoding.move_to_pick_up_pose(robot)
+    nedcoding.move_to(best_cell,robot)
     
-
+   
 # Main game loop
-while True:   
+run_count=0
+while True:
+    nedcoding.move_to_observation_pose(robot)   
     print_board()
     print("Make your move")
     result = game_over()
@@ -100,9 +105,13 @@ while True:
         else:
             print(result + ' wins!')
             time.sleep(2)
-            sys.exit()
+            sys.exit()    
+    elif run_count==0:
+        run_count+=1
+        continue
+    else:
+        board[detect_move()] = 'O'
+        ai_move()
     
-    board[detect_move()] = 'O'
-    ai_move()
    
         

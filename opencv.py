@@ -1,23 +1,34 @@
 import cv2
 import numpy as np
 import time
+import nedcoding
+
 
 
 
 def detect_move():
     from aicode import board #or aicode
     
-    img=cv2.VideoCapture(0)
-    
+    #img=cv2.VideoCapture(0)
+    robot = nedcoding.robot
 
     arr=[0,0,0,0,0,0,0,0,0]
     while True:       
-        time_count = img.get(cv2.CAP_PROP_FPS) * 3
-        ret,frame = img.read()      
-        frame = cv2.flip(frame, 1)      
+        #time_count = img.get(cv2.CAP_PROP_FPS) * 3
+        #ret,frame = img.read()  
+                 
+        img_compressed = robot.get_img_compressed()
+        frame = nedcoding.uncompress_img(img_compressed)
+        
+        #frame = cv2.flip(frame, 1)
+        frame = cv2.flip(frame, -1)
 
-        w = int(img.get(3))
-        h = int(img.get(4))
+        time_count = 90
+        w = 640
+        h = 480    
+
+        #w = int(img.get(3))
+        #h = int(img.get(4))
        
         a=int((w-h)/2)
         c=int(h*(1/3))
