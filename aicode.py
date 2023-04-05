@@ -1,11 +1,11 @@
 from opencv import detect_move
 import sys
 import time
-import nedcoding
+#import nedcoding
 
-robot=nedcoding.robot
+#robot=nedcoding.robot
 # Tic Tac Toe board
-board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+board = [' ',' ', ' ',' ',' ',' ',' ',' ',' ']
 
 # Function to print the Tic Tac Toe board
 def print_board():
@@ -36,13 +36,14 @@ def game_over():
     # Check for diagonal wins
     if board[0] == board[4] and board[0] == board[8] and board[0] != ' ':
         return board[0]
-    if board[2] == board[4] and board[2] == board[6] and board[2] != ' ':
+    elif board[2] == board[4] and board[2] == board[6] and board[2] != ' ':
         return board[2]
     # Check for tie game
-    if ' ' not in board:
-        return 'Tie'
+    elif ' ' in board:    
+        return None
     # Game is not over
-    return None
+    else:
+        return 'Tie'
 
 # Function for the minimax algorithm
 def minimax(depth, player):
@@ -86,32 +87,35 @@ def ai_move():
             best_score = score
             best_cell = cell
     board[best_cell] = 'X'
-    nedcoding.move_to_pick_up_pose(robot)
-    nedcoding.move_to(best_cell,robot)
+    #nedcoding.move_to_pick_up_pose(robot)
+    #nedcoding.move_to(best_cell,robot)
     
    
 # Main game loop
 run_count=0
 while True:
-    nedcoding.move_to_observation_pose(robot)   
-    print_board()
-    print("Make your move")
+    #nedcoding.move_to_observation_pose(robot)   
     result = game_over()
     if result != None:
-        if result == 'Tie':
-            print('Tie game')
+        if result == 'X':
+            print_board()          
+            print(result + ' wins!')
             time.sleep(2)
             sys.exit()
         else:
-            print(result + ' wins!')
+            print_board()
+            print('Tie game')
             time.sleep(2)
             sys.exit()    
-    elif run_count==0:
-        run_count+=1
-        continue
     else:
         board[detect_move()] = 'O'
-        ai_move()
+        if ' ' in board:
+            ai_move()
+            run_count+=1
+            print(run_count)
+
+    print_board()
+    print("Make your move")
     
    
         
