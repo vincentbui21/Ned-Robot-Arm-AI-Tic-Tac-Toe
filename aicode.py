@@ -1,10 +1,11 @@
 from opencv import detect_move
-from pyniryo import *
 import sys
 import time
+import nedcoding
 
+robot=nedcoding.robot
 # Tic Tac Toe board
-board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+board = [' ',' ', ' ',' ',' ',' ',' ',' ',' ']
 
 # Function to print the Tic Tac Toe board
 def print_board():
@@ -35,31 +36,32 @@ def game_over():
     # Check for diagonal wins
     if board[0] == board[4] and board[0] == board[8] and board[0] != ' ':
         return board[0]
-    if board[2] == board[4] and board[2] == board[6] and board[2] != ' ':
+    elif board[2] == board[4] and board[2] == board[6] and board[2] != ' ':
         return board[2]
     # Check for tie game
-    if ' ' not in board:
-        return 'Tie'
+    elif ' ' in board:    
+        return None
     # Game is not over
-    return None
+    else:
+        return 'Tie'
 
 # Function for the minimax algorithm
 def minimax(depth, player):
     # Check if the game is over
     result = game_over()
     if result != None:
-        if result == 'X':
+        if result == 'O':
             return 1
-        elif result == 'O':
+        elif result == 'X':
             return -1
         else:
             return 0
     # If it's the AI's turn
-    if player == 'X':
+    if player == 'O':
         best_score = -1000
         for cell in empty_cells():
             board[cell] = player
-            score = minimax(depth+1, 'O')
+            score = minimax(depth+1, 'X')
             board[cell] = ' '
             best_score = max(score, best_score)
         return best_score
@@ -68,7 +70,7 @@ def minimax(depth, player):
         best_score = 1000
         for cell in empty_cells():
             board[cell] = player
-            score = minimax(depth+1, 'X')
+            score = minimax(depth+1, 'O')
             board[cell] = ' '
             best_score = min(score, best_score)
         return best_score
@@ -78,31 +80,50 @@ def ai_move():
     best_score = -1000
     best_cell = None
     for cell in empty_cells():
-        board[cell] = 'X'
-        score = minimax(0, 'O')
+        board[cell] = 'O'
+        score = minimax(0, 'X')
         board[cell] = ' '
         if score > best_score:
             best_score = score
             best_cell = cell
-    board[best_cell] = 'X'
+    board[best_cell] = 'O'
+    nedcoding.move_to_pick_up_pose(robot)
+    nedcoding.move_to(best_cell,robot)
     
-
+   
 # Main game loop
-while True:   
-    print_board()
-    print("Make your move")
+run_count=0
+while True:
+    nedcoding.move_to_observation_pose(robot)   
     result = game_over()
     if result != None:
-        if result == 'Tie':
-            print('Tie game')
+        if result == 'O':
+            run_count = 100
+            print_board()          
+            print(result + ' wins!')
+            nedcoding.play_sound(run_count, robot)
+            nedcoding.trajectory(robot)
             time.sleep(2)
             sys.exit()
         else:
-            print(result + ' wins!')
+            run_count=10
+            print_board()
+            print('Tie game')
+            nedcoding.play_sound(run_count, robot)
+            nedcoding.trajectory(robot)
             time.sleep(2)
-            sys.exit()
+            sys.exit()    
+    else:
+        nedcoding.ring_light(run_count, robot)
+        nedcoding.play_sound(run_count, robot)
+        board[detect_move()] = 'X'
+        if ' ' in board:          
+            ai_move()
+            run_count+=1
+            
+
+    print_board()
+    print("Make your move")
     
-    board[detect_move()] = 'O'
-    ai_move()
    
         
