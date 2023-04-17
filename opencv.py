@@ -1,34 +1,35 @@
 import cv2
 import numpy as np
 import time
-#import nedcoding
+from pyniryo import *
+import nedcoding
 
 
-
+#robot = NiryoRobot("10.10.10.10")
 
 def detect_move():
-    from aicode import board #or aicode
-    
-    img=cv2.VideoCapture(0)
-    #robot = nedcoding.robot
+    from aicode import board
+    from nedcoding import robot
+    #img=cv2.VideoCapture(0)
+    robot=nedcoding.robot
 
     arr=[0,0,0,0,0,0,0,0,0]
     while True:       
-        time_count = img.get(cv2.CAP_PROP_FPS) * 3
-        ret,frame = img.read()  
+        #time_count = img.get(cv2.CAP_PROP_FPS) * 3
+        #ret,frame = img.read()  
                  
-        #img_compressed = robot.get_img_compressed()
-        #frame = nedcoding.uncompress_img(img_compressed)
+        img_compressed = robot.get_img_compressed()
+        frame = nedcoding.uncompress_img(img_compressed)
         
-        frame = cv2.flip(frame, 1)
-        #frame = cv2.flip(frame, -1)
+        #frame = cv2.flip(frame, 1)
+        frame = cv2.flip(frame, -1)
 
         time_count = 90
-        #w = 640
-        #h = 480    
+        w = 640
+        h = 480    
 
-        w = int(img.get(3))
-        h = int(img.get(4))
+        #w = int(img.get(3))
+        #h = int(img.get(4))
        
         a=int((w-h)/2)
         c=int(h*(1/3))
@@ -58,10 +59,10 @@ def detect_move():
 
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-        lower_blue = np.array([90, 50, 210]) #need to be update
-        upper_blue = np.array([130, 255, 255]) #need to be update
+        lower_green = np.array([36, 25, 25]) #need to be update
+        upper_green = np.array([86, 255, 255]) #need to be update
 
-        mask = cv2.inRange(hsv, lower_blue, upper_blue)
+        mask = cv2.inRange(hsv, lower_green, upper_green)
         blur = cv2.GaussianBlur(mask, (5, 5), 0)
 
         contours, hierarchy = cv2.findContours(blur, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)

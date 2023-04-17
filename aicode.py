@@ -1,9 +1,9 @@
 from opencv import detect_move
 import sys
 import time
-#import nedcoding
+import nedcoding
 
-#robot=nedcoding.robot
+robot=nedcoding.robot
 # Tic Tac Toe board
 board = [' ',' ', ' ',' ',' ',' ',' ',' ',' ']
 
@@ -50,18 +50,18 @@ def minimax(depth, player):
     # Check if the game is over
     result = game_over()
     if result != None:
-        if result == 'X':
+        if result == 'O':
             return 1
-        elif result == 'O':
+        elif result == 'X':
             return -1
         else:
             return 0
     # If it's the AI's turn
-    if player == 'X':
+    if player == 'O':
         best_score = -1000
         for cell in empty_cells():
             board[cell] = player
-            score = minimax(depth+1, 'O')
+            score = minimax(depth+1, 'X')
             board[cell] = ' '
             best_score = max(score, best_score)
         return best_score
@@ -70,7 +70,7 @@ def minimax(depth, player):
         best_score = 1000
         for cell in empty_cells():
             board[cell] = player
-            score = minimax(depth+1, 'X')
+            score = minimax(depth+1, 'O')
             board[cell] = ' '
             best_score = min(score, best_score)
         return best_score
@@ -80,39 +80,47 @@ def ai_move():
     best_score = -1000
     best_cell = None
     for cell in empty_cells():
-        board[cell] = 'X'
-        score = minimax(0, 'O')
+        board[cell] = 'O'
+        score = minimax(0, 'X')
         board[cell] = ' '
         if score > best_score:
             best_score = score
             best_cell = cell
-    board[best_cell] = 'X'
-    #nedcoding.move_to_pick_up_pose(robot)
-    #nedcoding.move_to(best_cell,robot)
+    board[best_cell] = 'O'
+    nedcoding.move_to_pick_up_pose(robot)
+    nedcoding.move_to(best_cell,robot)
     
    
 # Main game loop
 run_count=0
 while True:
-    #nedcoding.move_to_observation_pose(robot)   
+    nedcoding.move_to_observation_pose(robot)   
     result = game_over()
     if result != None:
-        if result == 'X':
+        if result == 'O':
+            run_count = 100
             print_board()          
             print(result + ' wins!')
+            nedcoding.play_sound(run_count, robot)
+            nedcoding.trajectory(robot)
             time.sleep(2)
             sys.exit()
         else:
+            run_count=10
             print_board()
             print('Tie game')
+            nedcoding.play_sound(run_count, robot)
+            nedcoding.trajectory(robot)
             time.sleep(2)
             sys.exit()    
     else:
-        board[detect_move()] = 'O'
-        if ' ' in board:
+        nedcoding.ring_light(run_count, robot)
+        nedcoding.play_sound(run_count, robot)
+        board[detect_move()] = 'X'
+        if ' ' in board:          
             ai_move()
             run_count+=1
-            print(run_count)
+            
 
     print_board()
     print("Make your move")
