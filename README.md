@@ -6,7 +6,7 @@
 This project implements a **3x3 Tic-Tac-Toe game**, where a **human player** competes against an **AI-controlled opponent**. The AI uses the **Ned robot arm** to pick up and place game pieces, which are distinguished by color. No matter how the human plays, the **AI is designed to always win or force a draw**.
 
 ## 🎥 Video Demonstration
-📌 Watch the project in action: <br>
+📌 Watch the project in action on youtube here: <br>
 [![Watch the video](https://img.youtube.com/vi/MdAdJVFdFAE/0.jpg)](https://www.youtube.com/watch?v=MdAdJVFdFAE)
 
 
