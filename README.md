@@ -1,4 +1,4 @@
-# Ned Robot Arm - AI Tic-Tac-Toe
+# Ned Robot Arm - AI Tic-Tac-Toe!
 
 🔹 **A 1v1 Tic-Tac-Toe Game between Human and AI, powered by the Ned 6-axis robot arm.**
 
