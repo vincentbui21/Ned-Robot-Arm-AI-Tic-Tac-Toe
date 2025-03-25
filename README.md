@@ -53,8 +53,5 @@ This project implements a **3x3 Tic-Tac-Toe game**, where a **human player** com
 3. The game continues until a **draw or an AI win** occurs.
 4. The **final result** is displayed.
 
-## 📜 License
-This project is open-source under the **MIT License**. Feel free to use, modify, and contribute!
-
 ## 🙌 Credits
-Developed by **Vincent Bui** and team.
+Developed by **Vincent Bui** and team. If you want to contribute or use, please contact vincentbui2108@gmail.com
